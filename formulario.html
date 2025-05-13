@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario de Reseña</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #eef1f7;
+      color: #2c3e50;
+    }
+
+    header {
+      background-color: #2563eb;
+      padding: 15px 30px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.75rem;
+      letter-spacing: 1px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 25px;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #bbdefb;
+    }
+
+    form {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 50px auto;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border: 1px solid #ddd;
+      background-color: #fff;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1e3a8a;
+      font-size: 1.8rem;
+    }
+
+    .nombre-docente {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #4b5563;
+      margin-bottom: 25px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+      color: #333;
+    }
+
+    .calificacion-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .star {
+      font-size: 2rem;
+      color: #d1d5db; /* Gris por defecto */
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .star:hover,
+    .star.selected {
+      color: #2563eb; /* Azul cuando se selecciona o se pasa el ratón */
+    }
+
+    .error {
+      color: red;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 1.1rem;
+    }
+
+    button:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* Estilos para la notificación */
+    .notificacion {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #4caf50;
+      color: white;
+      padding: 15px 30px;
+      font-size: 1rem;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s, visibility 0.5s;
+      z-index: 9999;
+    }
+
+    .notificacion.mostrar {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .notificacion p {
+      margin: 0;
+    }
+
+
+    .form-label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+  color: #1f2937; /* Gris oscuro */
+  font-size: 1rem;
+  text-align: center;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 12px 0px;
+  border: 2px solid #d1d5db; /* gris claro */
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  resize: vertical;
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #2563eb; /* azul */
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  background-color: #fff;
+}
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>ReviuMe</h1>
+    <nav>
+      <a href="index.html">Inicio</a>
+    </nav>
+  </header>
+
+  <form id="reseñaForm">
+    <h2>Dejar Reseña</h2>
+
+    <div class="nombre-docente">
+      <p id="nombreDocente">Profesor/a: Cargando...</p>
+    </div>
+
+    <label for="calificacion" class="form-label" >Calificación</label>
+    <div class="calificacion-container" id="calificacion">
+      <!-- Estrellas dinámicas se generarán aquí -->
+      <i class="fas fa-star star" data-value="1"></i>
+      <i class="fas fa-star star" data-value="2"></i>
+      <i class="fas fa-star star" data-value="3"></i>
+      <i class="fas fa-star star" data-value="4"></i>
+      <i class="fas fa-star star" data-value="5"></i>
+    </div>
+
+    <label for="comentario" class="form-label">Comentario</label>
+    <textarea id="comentario" class="form-textarea" rows="5" required></textarea>
+
+    <div class="error" id="errorMsg"></div>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <!-- Contenedor de notificación -->
+  <div id="notificacion" class="notificacion">
+    <p>¡Reseña enviada exitosamente!</p>
+  </div>
+
+  <script>
+    // Base de datos de docentes
+    const docentesDB = {
+      1: { nombre: "Juan Pérez", materias: ["Matemáticas", "Álgebra"], semestres: ["2024-2", "2025-1"] },
+      2: { nombre: "María Gómez", materias: ["Física", "Cálculo"], semestres: ["2025-1"] },
+      3: { nombre: "Carlos Rodríguez", materias: ["Programación", "Estructuras de Datos"], semestres: ["2024-2"] }
+    };
+
+    // Obtener el ID del docente desde la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = parseInt(urlParams.get("id"));
+
+    // Verificar si el docente existe en la base de datos
+    const docente = docentesDB[id];
+
+    // Si el docente existe, mostrar su nombre
+    if (docente) {
+      const nombreDocente = document.getElementById("nombreDocente");
+      nombreDocente.textContent = `Profesor/a: ${docente.nombre}`;
+    } else {
+      document.getElementById("nombreDocente").textContent = "Profesor/a no encontrado";
+    }
+
+    // Selección de calificación
+    const stars = document.querySelectorAll(".star");
+    let selectedRating = 0;
+
+    stars.forEach(star => {
+      star.addEventListener("click", () => {
+        selectedRating = parseInt(star.getAttribute("data-value"));
+        updateStars();
+      });
+    });
+
+    function updateStars() {
+      stars.forEach(star => {
+        const value = parseInt(star.getAttribute("data-value"));
+        if (value <= selectedRating) {
+          star.classList.add("selected");
+        } else {
+          star.classList.remove("selected");
+        }
+      });
+    }
+
+    // Lista de groserías
+    const groserias = [
+  // Insultos comunes
+  "tonto", "idiota", "imbécil", "estúpido", "bruto", "burro", "animal",
+  "inútil", "tarado", "retrasado", "mongólico", "bobo", "pendejo", "pendeja",
+  "estupidez", "mediocre", "payaso", "lambón", "lambona",
+
+  // Groserías fuertes
+  "malparido", "malparida", "hp", "hpta", "hijueputa", "hijuepucha", "hpta",
+  "puta", "puto", "perra", "perro", "zorra", "mierda", "gonorrea", "careverga",
+  "carechimba", "careculo", "culicagado", "culiado", "marica", "maricón", "maricona",
+  "mamerto", "cafre", "cabron", "cabrón", "cabrona", "cojudo", "pelotudo", "gilipollas",
+
+  // Variaciones y diminutivos ofensivos
+  "profe de mierda", "profesor de mierda", "profesora de mierda",
+  "ese man es una porquería", "viejo asqueroso", "vieja loca", "profe inútil",
+
+  // Palabras disfrazadas (usadas para burlar filtros)
+  "m13rda", "m1erda", "hpta", "h1jueputa", "hij0eputa", "m4lparido", "imbecil", "estupido", "gnrrea"
+];
+
+
+    // Elementos del formulario
+    const form = document.getElementById("reseñaForm");
+    const comentarioInput = document.getElementById("comentario");
+    const errorMsg = document.getElementById("errorMsg");
+
+    // Función para mostrar la notificación
+    function mostrarNotificacion(mensaje) {
+      const notificacion = document.getElementById("notificacion");
+      notificacion.textContent = mensaje;
+      notificacion.classList.add("mostrar");
+
+      // Ocultar la notificación después de 3 segundos
+      setTimeout(() => {
+        notificacion.classList.remove("mostrar");
+      }, 3000);
+    }
+
+    // Validación y almacenamiento de la reseña
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const comentario = comentarioInput.value.trim();
+      const comentarioLower = comentario.toLowerCase();
+
+      // Comprobar si el comentario contiene groserías
+      const hayGroserias = groserias.some(pal => comentarioLower.includes(pal));
+
+      if (hayGroserias) {
+        errorMsg.textContent = "Por favor elimina las palabras ofensivas del comentario.";
+        return;
+      }
+
+      const nuevaReseña = {
+        id,
+        calificacion: selectedRating,
+        comentario
+      };
+
+      // Guardar la reseña en localStorage
+      const reseñas = JSON.parse(localStorage.getItem("reseñas") || "[]");
+      reseñas.push(nuevaReseña);
+      localStorage.setItem("reseñas", JSON.stringify(reseñas));
+
+      // Mostrar notificación y redirigir
+      mostrarNotificacion("¡Reseña enviada exitosamente!");
+      window.location.href = `docente.html?id=${id}`;
+    });
+  </script>
+
+</body>
+</html>
