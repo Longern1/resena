@@ -145,6 +145,79 @@
         flex-direction: column;
       }
     }
+
+    @media screen and (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 10px;
+  }
+
+  nav a {
+    margin-left: 0;
+    margin-right: 15px;
+  }
+
+  .main {
+    flex-direction: column;
+    padding: 0 15px;
+  }
+
+  .docente-info,
+  .info,
+  .reseñas {
+    flex: 1 1 100%;
+    min-width: 100%;
+    margin-bottom: 20px;
+  }
+
+  a.button {
+    width: 100%;
+    text-align: center;
+  }
+}
+@media screen and (max-width: 500px) {
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  nav a {
+    font-size: 0.95rem;
+    margin-right: 10px;
+  }
+
+  .main {
+    gap: 20px;
+  }
+
+  .docente-info,
+  .info,
+  .reseñas {
+    padding: 15px;
+  }
+
+  .docente-info h2,
+  .reseñas h2 {
+    font-size: 1.3rem;
+  }
+
+  p,
+  .reseña p {
+    font-size: 1rem;
+  }
+
+  .estrellas {
+    font-size: 1.1rem;
+  }
+
+  a.button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+}
+
+    
   </style>
 </head>
 <body>
