@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <title>Docente – ReviewMe</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #eef1f7;
+      color: #2c3e50;
+    }
+
+    header {
+      background: linear-gradient(to right, #1e3a8a, #2563eb);
+      padding: 20px 40px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 30px;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #cbdcfb;
+    }
+
+    .container {
+  display: flex;
+  gap: 10px;
+  margin-top: 2%;
+  justify-content: center; /* Centra el contenido horizontalmente */
+}
+
+
+
+
+
+
+/* Estilo para la columna izquierda (info del docente) */
+.item.info {
+
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  flex: 1;
+  max-width: 300px;
+  height: 800px;
+}
+
+/* Estilo para la columna derecha (reseñas) */
+.item.resenas {
+  flex: 2;
+  max-width: 1199px;
+  height: 800px;
+  margin-top: -1% !important;
+  margin-left: 1% !important;
+
+}
+
+
+.resena {
+  background-color: #f9f9f9;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-left: 4px solid #3b82f6;
+  border-radius: 6px;
+  
+}
+
+.texto-resena {
+  font-style: italic;
+  margin-bottom: 5px;
+}
+
+.fecha-resena {
+  font-size: 12px;
+  color: gray;
+}
+
+
+
+
+
+
+
+
+
+    a.button {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: #3b82f6;
+      color: white;
+      text-decoration: none;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    a.button:hover {
+      background-color: #2563eb;
+    }
+
+/* Estilos para las estrellas */
+.fa-star {
+  color: #ccc;
+}
+
+.fa-star.filled {
+  color: gold;
+}
+
+.fa-star-half-alt {
+  color: gold;
+}
+
+.estrella {
+  font-size: 20px;
+}
+
+.estrella.llena {
+  color: gold;
+}
+
+.estrella.media {
+  color: gold;
+  opacity: 0.5;
+}
+
+.estrella.vacia {
+  color: #ccc;
+}
+
+
+/* Estilos generales para el contenedor de reseñas */
+.item.resenas {
+  margin: 20px 0;
+}
+
+h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* Estilo para cada reseña */
+.resena {
+  background-color: #f9f9f9;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.texto-resena {
+  font-size: 18px;
+  color: #555;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.fecha-resena {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+
+
+/* Estilo para los comentarios */
+.comentarios {
+  margin-top: 20px;
+}
+
+.comentario {
+  background-color: #e9ecef;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comentario small {
+  display: block;
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 5px;
+}
+
+/* Estilos para el formulario de respuesta */
+form {
+  margin-top: 20px;
+}
+
+textarea {
+  width: 90%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: none;
+  margin-bottom: 10px;
+}
+
+textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilos para la lista de reseñas */
+#listaResenas {
+  margin-top: 30px;
+}
+
+/* Estilo para cuando no hay comentarios */
+#listaResenas p {
+  font-size: 14px;
+  color: #777;
+}
+
+/* Estilo para el borde del formulario */
+form {
+  margin-top: 20px;
+}
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ReviewMe</h1>
+    <nav>
+      <a href="/">Inicio</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="item info">
+      <h2 id="nombreDocente">{{ docente.nombre }}</h2>
+  
+      <p><strong>Materias:</strong> {{ docente.materias }}</p>
+      <p><strong>Semestres:</strong> {{ docente.semestres }}</p>
+      <p><strong>Promedio de Estrellas:</strong> 
+        {% if promedio is not none %}
+          {{ promedio }}
+        {% else %}
+          Sin calificaciones
+        {% endif %}
+      </p>
+      <div class="estrellas-promedio">
+        {% for i in range(1, 6) %}
+          {% if promedio is not none %}
+            {% if i <= promedio|round(0, 'floor') %}
+              <i class="fas fa-star estrella llena"></i>
+            {% elif i - promedio < 1 %}
+              <i class="fas fa-star-half-alt estrella media"></i>
+            {% else %}
+              <i class="far fa-star estrella vacia"></i>
+            {% endif %}
+          {% else %}
+            <i class="far fa-star estrella vacia"></i>  <!-- Si no hay promedio, mostrar estrellas vacías -->
+          {% endif %}
+        {% endfor %}
+      </div>
+      
+  
+      <a class="button" style="display: flex; justify-content: center; margin-top: 40px;" href="/formularios?id_docente={{ docente.id_docente }}">Dejar una reseña</a>
+    </div>
+  
+    <div class="item resenas">
+      <h2>Reseñas</h2>
+      <div id="listaResenas">
+        {% if resenas %}
+          {% for r in resenas %}
+            <div class="resena">
+              <p class="texto-resena">"{{ r.resena }}"</p>
+              <p class="fecha-resena">{{ r.fecha.strftime('%d/%m/%Y %H:%M') }}</p>
+              <p class="valor-resena">Calificación:
+                {% for i in range(1, 6) %}
+                  <i class="fas fa-star{% if i <= r.valor_calificacion %} filled{% endif %}"></i>
+                {% endfor %}
+              </p>
+    
+              <!-- Mostrar los comentarios (respuestas) de esta reseña -->
+              <div class="comentarios">
+                {% if r.comentarios %}
+                  {% for c in r.comentarios %}
+                    <div class="comentario">
+                      <p>{{ c.comentario }}</p>
+                      <small>{{ c.fecha.strftime('%d/%m/%Y %H:%M') }}</small>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <p>No hay comentarios para esta reseña aún.</p>
+                {% endif %}
+              </div>
+    
+              <!-- Formulario para responder a la reseña -->
+              <form method="POST" action="{{ url_for('comentar_resena', id_resena=r.id_resena) }}">
+                <textarea name="comentario" rows="2" required placeholder="Escribe tu respuesta..."></textarea>
+                <button type="submit">Responder</button>
+            </form>
+            
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>No hay reseñas aún.</p>
+        {% endif %}
+      </div>
+    </div>
+    
+    </div>
+  </div>
+  
+
+    
+      
+      
+      
+      
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario de Reseña</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #eef1f7;
+      color: #2c3e50;
+    }
+
+    header {
+      background: linear-gradient(to right, #1e3a8a, #2563eb);
+      padding: 20px 40px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 30px;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #cbdcfb;
+    }
+
+
+    form {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 50px auto;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border: 1px solid #ddd;
+      background-color: #fff;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1e3a8a;
+      font-size: 1.8rem;
+    }
+
+    .nombre-docente {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #4b5563;
+      margin-bottom: 25px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+      color: #333;
+    }
+
+    .calificacion-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .star {
+      font-size: 2rem;
+      color: #d1d5db; /* Gris por defecto */
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .star:hover,
+    .star.selected {
+      color: #2563eb; /* Azul cuando se selecciona o se pasa el ratón */
+    }
+    .star.hover,
+.star:hover {
+  color: #60a5fa; /* Azul más claro para previsualización */
+}
+    .error {
+      color: red;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 1.1rem;
+    }
+
+    button:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* Estilos para la notificación */
+    .notificacion {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #4caf50;
+      color: white;
+      padding: 15px 30px;
+      font-size: 1rem;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s, visibility 0.5s;
+      z-index: 9999;
+    }
+
+    .notificacion.mostrar {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .notificacion p {
+      margin: 0;
+    }
+
+
+    .form-label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+  color: #1f2937; /* Gris oscuro */
+  font-size: 1rem;
+  text-align: center;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 12px 0px;
+  border: 2px solid #d1d5db; /* gris claro */
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  resize: vertical;
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #2563eb; /* azul */
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  background-color: #fff;
+}
+
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>ReviewMe</h1>
+    <nav>
+      <a href="/">Inicio</a>
+    </nav>
+  </header>
+
+<form method="POST" id="resenaForm">
+
+    <input type="hidden" name="id_docente" value="{{ docente.id_docente }}">
+
+
+    <h2>Dejar Reseña</h2>
+    
+    <div class="nombre-docente">
+      <p id="nombreDocente">Profesor/a: {{ docente['nombre'] if docente else 'Cargando...' }}</p>
+    </div>
+    
+  
+    <label for="calificacion" class="form-label">Calificación</label>
+    <div class="calificacion-container" id="calificacion">
+      <i class="fas fa-star star" data-value="1"></i>
+      <i class="fas fa-star star" data-value="2"></i>
+      <i class="fas fa-star star" data-value="3"></i>
+      <i class="fas fa-star star" data-value="4"></i>
+      <i class="fas fa-star star" data-value="5"></i>
+    </div>
+    <input type="hidden" name="calificacion" id="calificacionInput" required>
+  
+    <label for="resena" class="form-label">Comentario</label>
+    <textarea name="resena" id="comentario" class="form-textarea" rows="5" required></textarea>
+  
+    <div class="error" id="errorMsg"></div>
+    <button type="submit">Enviar</button>
+  </form>
+  
+
+ 
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const estrellas = document.querySelectorAll(".star");
+      const calificacionInput = document.getElementById("calificacionInput");
+      const errorMsg = document.getElementById("errorMsg");
+      const formulario = document.getElementById("resenaForm");
+      const comentarioInput = document.getElementById("comentario");
+  
+      const palabrasProhibidas = [
+  // General vulgares comunes
+  "hp", "hpta", "gonorrea", "malparido", "malparida", "hijueputa",
+  "mierda", "verga", "puta", "perra", "cojudo", "pendejo", "pendeja",
+  "carechimba", "careverga", "careculo", "coño", "cabron", "culicagado",
+  "culicagada", "jueputa", "zorra", "puto", "putita", "cochina", "cochino",
+  "imbecil", "idiota", "estupido", "estúpido", "estúpida", "marica", "maricón",
+  "mariquita", "mrd", "mierdero", "chimba", "culiao", "culiá", "culero", "carajo",
+  "fuck", "fucking", "asshole", "bastardo", "bastarda", "bitch", "bitches", "slut",
+  "pervertido", "asqueroso", "asquerosa",
+
+  // Costeras colombianas
+  "ñero", "ñera", "cachapera", "lavaperro", "lavaperra", "monda", "mondá", "berraco",
+  "berraca", "cojones", "mamaburra", "mamaguevo", "mamabicho", "comehuevo", "comemierda",
+  "jodedor", "jodido", "jodida", "joda", "ladilla", "sapo", "sapa", "boquisapo", "pico'e loro",
+  "hijuevaina", "culiplancha", "lavaculos", "come culo", "mamagueva", "verguero", "paraco hijueputa",
+  "caremondá", "mondá", "carepico", "careculo", "careverga", "caremondá", "mamagallista",
+  "malapaga", "mamadera", "vacíador", "chupaverga", "tragasables", "tragaverga", "peinagatos",
+  "pasamonda", "locaria", "comepeo", "culebrero", "patacón podrido", "boleta", "ñangara",
+  "repuñeta", "maldioma", "pencón", "pelagato", "piruja", "putarraca", "puta'e mierda"
+];
+
+  
+      let calificacionSeleccionada = 0;
+  
+      estrellas.forEach((estrella, index) => {
+        estrella.addEventListener("mouseover", () => {
+          estrellas.forEach((star, i) => {
+            star.classList.toggle("hover", i <= index);
+          });
+        });
+  
+        estrella.addEventListener("mouseout", () => {
+          estrellas.forEach(star => star.classList.remove("hover"));
+        });
+  
+        estrella.addEventListener("click", () => {
+          calificacionSeleccionada = index + 1;
+          calificacionInput.value = calificacionSeleccionada;
+  
+          estrellas.forEach((star, i) => {
+            star.classList.toggle("selected", i < calificacionSeleccionada);
+          });
+  
+          errorMsg.textContent = "";
+        });
+      });
+  
+      formulario.addEventListener("submit", function (e) {
+        // Validar calificación
+        if (calificacionSeleccionada === 0) {
+          e.preventDefault();
+          errorMsg.textContent = "Por favor, selecciona una calificación.";
+          return;
+        }
+  
+        // Validar lenguaje ofensivo con lista local
+        const comentario = comentarioInput.value.toLowerCase();
+  
+        const contieneGroseria = palabrasProhibidas.some(palabra =>
+          comentario.includes(palabra)
+        );
+  
+        if (contieneGroseria) {
+          e.preventDefault();
+          errorMsg.textContent = "Tu comentario contiene lenguaje inapropiado. Por favor edítalo.";
+          return;
+        }
+      });
+    });
+  </script>
+  
+  
+  
+  
+  
+</body>
+</html>

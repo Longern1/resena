@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReviuMe – Plataforma Anónima</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f0f4ff, #eaf1fb);
+      color: #2c3e50;
+    }
+
+    header {
+      background: linear-gradient(to right, #1e3a8a, #2563eb);
+      padding: 20px 40px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 30px;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #cbdcfb;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2rem;
+      color: #1e3a8a;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 5px;
+      font-size: 1rem;
+      margin-bottom: 25px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .docente {
+      background-color: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .docente:hover {
+      transform: scale(1.02);
+      background-color: #f9fafb;
+    }
+
+    .docente a {
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+    }
+    
+
+    @media (max-width: 600px) {
+      .docente {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      nav {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>ReviewMe</h1>
+    <nav>
+      <a href="/">Inicio</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Buscar Docente</h2>
+    <input type="text" id="busqueda" placeholder="Buscar por nombre o materia...">
+    <div id="listaDocentes"></div>
+  </div>
+
+  <script>
+    function generarEstrellas(promedio) {
+      if (promedio === 'Sin calificaciones') {
+        return '<span style="color: gray;">Sin calificaciones</span>';
+      }
+  
+      const estrellasLlenas = Math.floor(promedio);
+      const tieneMedia = promedio % 1 >= 0.5;
+      const estrellasVacias = 5 - estrellasLlenas - (tieneMedia ? 1 : 0);
+  
+      let htmlEstrellas = "";
+  
+      for (let i = 0; i < estrellasLlenas; i++) {
+        htmlEstrellas += "★"; // estrella llena
+      }
+  
+      if (tieneMedia) {
+        htmlEstrellas += "☆"; // media estrella
+      }
+  
+      for (let i = 0; i < estrellasVacias; i++) {
+        htmlEstrellas += "✩"; // estrella vacía
+      }
+  
+      return `<span style="color: gold; font-size: 1.2rem;">${htmlEstrellas}</span>`;
+    }
+  
+    function cargarDocentes(query = '') {
+      fetch('/buscar_docente?q=' + encodeURIComponent(query))
+        .then(response => response.json())
+        .then(data => {
+          const lista = document.getElementById('listaDocentes');
+          lista.innerHTML = ''; // Limpiar lista antes de actualizar
+  
+          if (data.length === 0) {
+            lista.innerHTML = '<p>No se encontraron docentes.</p>';
+          } else {
+            data.forEach(doc => {
+              const div = document.createElement('div');
+              div.className = 'docente';
+  
+              const promedio = doc.promedio !== null ? parseFloat(doc.promedio) : 'Sin calificaciones';
+              const estrellasHTML = generarEstrellas(promedio);
+  
+              const enlace = document.createElement('a');
+              enlace.href = `/docentes/${doc.id_docente}`;  // ✅ Coincide con Flask
+
+
+enlace.style.textDecoration = 'none'; // Opcional: quitar subrayado
+enlace.style.color = 'inherit';       // Opcional: heredar colores
+
+// Crea un contenedor dentro del enlace para que sea clickeable todo
+const contenido = document.createElement('div');
+contenido.innerHTML = `
+  <span style="color: black; font-weight: bold; font-size: 1.3rem;">
+    <em style="color: #2563eb;">Docente:</em> ${doc.nombre}
+  </span><br>
+  <em style="color: #2563eb;">Semestres:</em> ${doc.semestres}<br>
+  <em style="color: #2563eb;">Materias:</em> ${doc.materias}<br>
+  <em style="color: #2563eb;">Promedio de Calificación:</em> ${promedio}<br>
+  ${estrellasHTML}
+`;
+
+enlace.appendChild(contenido);
+div.appendChild(enlace);
+lista.appendChild(div);
+
+            });
+          }
+        });
+    }
+  
+    // Mostrar todos los docentes al cargar la página
+    window.addEventListener('DOMContentLoaded', () => {
+      cargarDocentes();
+    });
+  
+    // Filtrar docentes según el texto ingresado
+    document.getElementById('busqueda').addEventListener('input', function () {
+      const query = this.value;
+      cargarDocentes(query);
+    });
+  </script>
+  
+
+</body>
+</html>
